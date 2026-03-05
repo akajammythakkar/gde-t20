@@ -83,9 +83,6 @@ def generate_ai_prediction(live_data):
     ]
 
     generate_content_config = types.GenerateContentConfig(
-        thinking_config=types.ThinkingConfig(
-            thinking_level="HIGH",
-        ),
         response_mime_type="application/json",
         response_schema=genai.types.Schema(
             type=genai.types.Type.OBJECT,
