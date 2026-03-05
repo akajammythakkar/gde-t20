@@ -18,9 +18,11 @@ supabase: Client = create_client(
     os.environ.get("SUPABASE_ANON_KEY") or os.environ.get("SUPABASE_KEY")
 )
 
-# --- AI CACHE ---
+# --- CACHE ---
 latest_ai_prediction = None
 last_ai_update_time = 0
+latest_live_score = None
+last_live_score_time = 0
 
 # --- SQUAD LISTS ---
 SQUADS = {
@@ -123,7 +125,12 @@ def index():
 
 @app.route("/api/live_match")
 def live_match():
-    return jsonify(get_live_score())
+    global latest_live_score, last_live_score_time
+    current_time = time.time()
+    if not latest_live_score or (current_time - last_live_score_time) > 60:
+        latest_live_score = get_live_score()
+        last_live_score_time = current_time
+    return jsonify(latest_live_score)
 
 @app.route("/api/ai_predictions")
 def ai_predictions():
